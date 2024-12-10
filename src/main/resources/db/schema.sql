@@ -10,18 +10,18 @@ CREATE TABLE IF NOT EXISTS `calendar` (
                             `name` VARCHAR(255) NOT NULL DEFAULT '이벤트',
                             `start` TIMESTAMP NOT NULL,
                             `end` TIMESTAMP NOT NULL,
-                            `need_noti` TINYINT(1) NULL DEFAULT 0,
-                            `depth` TINYINT NULL DEFAULT 1,
-                            `tag` ENUM('RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE', 'PURPLE', 'PINK') DEFAULT 'RED',
+                            `need_noti` BOOL NULL DEFAULT FALSE,
+                            `depth` SMALLINT NULL DEFAULT 1,
+                            `tag` TINYINT DEFAULT 0,
                             CONSTRAINT `FK_User_TO_Calendar_1` FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `todo` (
                         `tid` BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1)) PRIMARY KEY ,
                         `user_id` VARCHAR(31) NOT NULL,
-                        `priority` TINYINT NULL,
+                        `priority` SMALLINT NULL,
                         `complate` TIMESTAMP NULL,
-                        `delay` TINYINT(1) NULL DEFAULT 0,
+                        `delay` BOOL NULL DEFAULT FALSE,
                         `name` VARCHAR(255) NULL,
                         `category` VARCHAR(31) NOT NULL,
                         CONSTRAINT `FK_User_TO_Todo_1` FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`)
