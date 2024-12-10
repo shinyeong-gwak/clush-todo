@@ -1,0 +1,28 @@
+version: '3'
+services:
+  spring-app:
+    image: shinyenggwak/clush-todo-back:0.0.1-INIT
+    networks:
+      - my_network
+    ports:
+      - "0.0.0.0:8080:8080"
+    environment:
+      - DB_NAME = root
+      - DB_PASS = rootsygwak
+      - DB_URL = jdbc:mysql://localhost:3306/clush?useUnicode=true&characterEncoding=utf8
+
+  mysql:
+    image: "mysql"
+    networks:
+      - my_network
+    ports:
+      - "3306:3306"
+    command:
+      - --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootsygwak
+      - MYSQL_DATABASE=clush
+#      - MYSQL_USER = clush
+#      - MYSQL_PASSWORD = sygwak
+networks:
+  my_network:
