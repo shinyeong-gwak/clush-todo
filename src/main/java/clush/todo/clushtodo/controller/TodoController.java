@@ -1,7 +1,7 @@
 package clush.todo.clushtodo.controller;
 
 import clush.todo.clushtodo.dto.IdRes;
-import clush.todo.clushtodo.dto.ToDoDTO;
+import clush.todo.clushtodo.dto.TaskReq;
 import clush.todo.clushtodo.entity.User;
 import clush.todo.clushtodo.error.CustomException;
 import clush.todo.clushtodo.service.TodoService;
@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,7 +23,7 @@ public class TodoController {
     UserService userSvc;
 
     @PostMapping
-    public ResponseEntity<?> addTodo(@RequestBody ToDoDTO.AddReq addReq) throws CustomException {
+    public ResponseEntity<?> addTodo(@RequestBody TaskReq addReq) throws CustomException {
         User user = userSvc.validate(addReq.getUserId());
         return ResponseEntity.ok(new IdRes(todoSvc.addTodo(user,addReq.getTodo())));
     }
@@ -58,7 +57,7 @@ public class TodoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editTodo(@PathVariable("id") String tid, @RequestBody ToDoDTO.BasicDTO newTodo) throws CustomException {
+    public ResponseEntity<?> editTodo(@PathVariable("id") String tid, @RequestBody TaskReq.Task newTodo) throws CustomException {
         UUID tId = UUID.fromString(tid);
         todoSvc.editTodo(tId,newTodo);
         return ResponseEntity.ok(HttpStatus.OK);
