@@ -6,12 +6,14 @@ import clush.todo.clushtodo.entity.Calendar;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Repository
 public interface CalendarRepo extends JpaRepository<Calendar, UUID> {
     @Query("SELECT new clush.todo.clushtodo.dto.Month(c.name,c.start,c.end,c.tag) FROM Calendar c WHERE c.user.userId = :userId AND (c.start <= :end OR c.end >= :start ) ")
     List<Month> findAllByMonth(@Param("start") LocalDate start,
