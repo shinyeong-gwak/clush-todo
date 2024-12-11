@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class Handler {
     @ExceptionHandler(CustomException.class)
     protected ResponseEntity<String> handleCustomException(CustomException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("error: \"" + exception.myStatus.getMessage() + "\"");
+        return ResponseEntity.status(exception.myStatus.getCode()).body("error: \"" + exception.myStatus.getMessage() + "\"");
     }
 }
