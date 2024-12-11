@@ -2,7 +2,7 @@ package clush.todo.clushtodo.controller;
 
 import clush.todo.clushtodo.dto.IdRes;
 import clush.todo.clushtodo.dto.Schedule;
-import clush.todo.clushtodo.dto.ScheduleDTO;
+import clush.todo.clushtodo.dto.ScheduleReq;
 
 import clush.todo.clushtodo.entity.User;
 import clush.todo.clushtodo.error.CustomException;
@@ -27,7 +27,7 @@ public class CalendarController {
     UserService userSvc;
 
     @PostMapping
-    public ResponseEntity<?> addSchedule(@RequestBody ScheduleDTO.AddReq addReq) throws CustomException {
+    public ResponseEntity<?> addSchedule(@RequestBody ScheduleReq addReq) throws CustomException {
         User user = userSvc.validate(addReq.getUserId());
         return ResponseEntity.ok(new IdRes(calSvc.addSchedule(user,addReq.getSchedule())));
     }

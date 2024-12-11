@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
+@Data@AllArgsConstructor
 public class Month {
     private String name;
     private LocalDateTime start;

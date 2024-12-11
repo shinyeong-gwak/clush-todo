@@ -1,12 +1,13 @@
 package clush.todo.clushtodo.dto;
 
 import clush.todo.clushtodo.entity.Calendar;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
+@Data@AllArgsConstructor
 public class Schedule {
     private UUID cid;
     private String name;
