@@ -1,6 +1,6 @@
 package clush.todo.clushtodo.service;
 
-import clush.todo.clushtodo.dto.ToDoDTO;
+import clush.todo.clushtodo.dto.TaskReq;
 import clush.todo.clushtodo.dto.ViewRes;
 import clush.todo.clushtodo.entity.Todo;
 import clush.todo.clushtodo.entity.User;
@@ -10,6 +10,7 @@ import clush.todo.clushtodo.repository.TodoRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ public class TodoService {
     @Autowired
     TodoRepo todoRepo;
 
-    public UUID addTodo(User user, ToDoDTO.BasicDTO todo) {
+    public UUID addTodo(User user, TaskReq.Task todo) {
         Todo saved = todoRepo.saveAndFlush(Todo.builder()
                 .user(user)
                 .name(todo.getName())
@@ -51,7 +52,7 @@ public class TodoService {
         todoRepo.updateDelay(tid,true);
     }
 
-    public void editTodo(UUID tid, ToDoDTO.BasicDTO newTodo) throws CustomException {
+    public void editTodo(UUID tid, TaskReq.Task newTodo) throws CustomException {
         Todo todo = todoRepo.findById(tid).orElseThrow( () -> new CustomException(CustomResponse.NOT_FOUND) );
 
         Optional.ofNullable(newTodo.getName()).ifPresent(todo::setName);
@@ -71,5 +72,14 @@ public class TodoService {
 
     public List<ViewRes> getTodosDelay(String userId) {
         return todoRepo.findAllByIdAndDelayTrue(userId);
+    }
+
+
+    @Scheduled(cron = "0 4 * * * *")
+    public void cleaning() {
+        // 이전날 완료한 항목 지우기
+        todoRepo.deleteAllByComplate(LocalDateTime.now());
+        // 아직 완료되지 않는 항목 미완료 풀로 이동시키기
+        todoRepo.updateAllDelay();
     }
 }
