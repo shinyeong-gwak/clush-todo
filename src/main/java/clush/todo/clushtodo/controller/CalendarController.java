@@ -14,10 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.UUID;
 
-import static clush.todo.clushtodo.error.CustomResponse.UNAUTHORIZED;
 
 @RestController
 @RequestMapping(name = "/schedule")
@@ -28,36 +26,29 @@ public class CalendarController {
     @Autowired
     UserService userSvc;
 
-    private User validate(String userId) throws CustomException {
-        Optional<User> userOp = userSvc.getUser(userId);
-        if(userOp.isEmpty())
-            throw new CustomException(UNAUTHORIZED);
-        return userOp.get();
-    }
-
     @PostMapping
     public ResponseEntity<?> addSchedule(@RequestBody ScheduleDTO.AddReq addReq) throws CustomException {
-        User user = validate(addReq.getUserId());
+        User user = userSvc.validate(addReq.getUserId());
         return ResponseEntity.ok(new IdRes(calSvc.addSchedule(user,addReq.getSchedule())));
     }
 
     @GetMapping("/month")
     public ResponseEntity<?> getSchedulesMonth(@RequestParam(name = "date") LocalDate date,
                                           @RequestParam(name = "userId") String userId) throws CustomException {
-        validate(userId);
+        userSvc.validate(userId);
         return ResponseEntity.ok(calSvc.getSchedules(date,userId));
     }
     @GetMapping("/day")
     public ResponseEntity<?> getSchedulesDay(@RequestParam(name = "date") LocalDate date,
                                                @RequestParam(name = "userId") String userId) throws CustomException {
-        validate(userId);
+        userSvc.validate(userId);
         return ResponseEntity.ok(calSvc.getOneDay(date,userId));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object>  editSchedule(@PathVariable(name = "id") String cid, Schedule newSchedule) throws CustomException {
         UUID cId = UUID.fromString(cid);
-        return ResponseEntity.ok(calSvc.editSchedule(cId,newSchedule));
+        return ResponseEntity.ok(new IdRes(calSvc.editSchedule(cId,newSchedule)));
     }
 
     @DeleteMapping("/{id}")

@@ -1,6 +1,7 @@
 package clush.todo.clushtodo.service;
 
 import clush.todo.clushtodo.entity.User;
+import clush.todo.clushtodo.error.CustomException;
 import clush.todo.clushtodo.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static clush.todo.clushtodo.error.CustomResponse.UNAUTHORIZED;
 
 @Service
 @Slf4j
@@ -25,5 +28,12 @@ public class UserService {
                 return true;
         }
         return false;
+    }
+
+    public User validate(String userId) throws CustomException {
+        Optional<User> userOp = getUser(userId);
+        if(userOp.isEmpty())
+            throw new CustomException(UNAUTHORIZED);
+        return userOp.get();
     }
 }
