@@ -1,35 +1,69 @@
 package clush.todo.clushtodo.controller;
 
+import clush.todo.clushtodo.dto.IdRes;
 import clush.todo.clushtodo.dto.Schedule;
 import clush.todo.clushtodo.dto.ScheduleDTO;
+
+import clush.todo.clushtodo.entity.User;
+import clush.todo.clushtodo.error.CustomException;
+import clush.todo.clushtodo.service.CalendarService;
+import clush.todo.clushtodo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Optional;
+import java.util.UUID;
+
+import static clush.todo.clushtodo.error.CustomResponse.UNAUTHORIZED;
 
 @RestController
 @RequestMapping(name = "/schedule")
 public class CalendarController {
+    @Autowired
+    CalendarService calSvc;
+
+    @Autowired
+    UserService userSvc;
+
+    private User validate(String userId) throws CustomException {
+        Optional<User> userOp = userSvc.getUser(userId);
+        if(userOp.isEmpty())
+            throw new CustomException(UNAUTHORIZED);
+        return userOp.get();
+    }
 
     @PostMapping
-    public ResponseEntity<Object> addSchedule(@RequestBody ScheduleDTO.AddReq addReq) {
-        return ResponseEntity.ok(HttpStatus.OK);
+    public ResponseEntity<?> addSchedule(@RequestBody ScheduleDTO.AddReq addReq) throws CustomException {
+        User user = validate(addReq.getUserId());
+        return ResponseEntity.ok(new IdRes(calSvc.addSchedule(user,addReq.getSchedule())));
     }
-    @GetMapping
-    public ResponseEntity<List<Schedule>> getSchedules(@RequestParam(name = "userId") String userId){
-        return ResponseEntity.ok(new ArrayList<>());
+
+    @GetMapping("/month")
+    public ResponseEntity<?> getSchedulesMonth(@RequestParam(name = "date") LocalDate date,
+                                          @RequestParam(name = "userId") String userId) throws CustomException {
+        validate(userId);
+        return ResponseEntity.ok(calSvc.getSchedules(date,userId));
+    }
+    @GetMapping("/day")
+    public ResponseEntity<?> getSchedulesDay(@RequestParam(name = "date") LocalDate date,
+                                               @RequestParam(name = "userId") String userId) throws CustomException {
+        validate(userId);
+        return ResponseEntity.ok(calSvc.getOneDay(date,userId));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object>  editSchedule(@PathVariable(name = "iid") String id, Schedule newSchedule) {
-        return ResponseEntity.ok(HttpStatus.OK);
+    public ResponseEntity<Object>  editSchedule(@PathVariable(name = "id") String cid, Schedule newSchedule) throws CustomException {
+        UUID cId = UUID.fromString(cid);
+        return ResponseEntity.ok(calSvc.editSchedule(cId,newSchedule));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object>  deleteSchedule(@PathVariable(name = "id") String id) {
+    public ResponseEntity<Object>  deleteSchedule(@PathVariable(name = "id") String cid) throws CustomException {
+        UUID cId = UUID.fromString(cid);
+        calSvc.deleteSchedule(cId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
