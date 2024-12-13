@@ -11,11 +11,11 @@ import java.util.UUID;
 @RequiredArgsConstructor@AllArgsConstructor
 public class Todo {
     @Id @Column(columnDefinition = "BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1))")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     UUID tid;
     Short priority;
     @Nullable
-    LocalDateTime complate;
+    LocalDateTime complete;
     Boolean delay = false;
     String name;
     String category;

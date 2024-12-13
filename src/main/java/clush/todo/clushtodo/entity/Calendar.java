@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 public class Calendar {
     @Id @Column(columnDefinition = "BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1))")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     UUID cid;
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id")
     User user;
