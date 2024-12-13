@@ -12,7 +12,7 @@ public class ViewRes {
     UUID tid;
 
     Short priority;
-    LocalDateTime complate;
+    LocalDateTime complete;
     Boolean delay;
 
     String name;
