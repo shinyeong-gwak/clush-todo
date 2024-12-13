@@ -4,6 +4,7 @@ import clush.todo.clushtodo.dto.Month;
 import clush.todo.clushtodo.dto.Schedule;
 import clush.todo.clushtodo.entity.Calendar;
 import clush.todo.clushtodo.entity.User;
+import clush.todo.clushtodo.error.CustomException;
 import clush.todo.clushtodo.repository.CalendarRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,13 +17,15 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
+import static clush.todo.clushtodo.error.CustomResponse.DATA_NOT_SAVED;
+
 @Service @Slf4j @RequiredArgsConstructor
 public class CalendarService {
 
     @Autowired
     CalendarRepo calRepo;
 
-    public UUID addSchedule(User user, Schedule schedule) {
+    public UUID addSchedule(User user, Schedule schedule) throws CustomException {
         Calendar saved = calRepo.saveAndFlush(Calendar.builder()
                         .user(user)
                         .start(schedule.getStart())
@@ -32,8 +35,11 @@ public class CalendarService {
                         .name(schedule.getName())
                         .needNoti(schedule.getNeedNoti())
                 .build());
-
-        return saved.getCid();
+        try {
+            return saved.getCid();
+        } catch (NullPointerException e) {
+            throw new CustomException(DATA_NOT_SAVED);
+        }
     }
 
     //상세 보기 x : 캘린더에 뜰 정보만 리턴하기
