@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `todo`
     `tid`      BINARY(16)        DEFAULT (UUID_TO_BIN(UUID(), 1)) PRIMARY KEY,
     `user_id`  VARCHAR(31)  NOT NULL,
     `priority` SMALLINT     NULL,
-    `complate` TIMESTAMP    NULL,
+    `complete` TIMESTAMP    NULL,
     `delay`    BOOL         NULL DEFAULT FALSE,
     `name`     VARCHAR(255) NULL,
     `category` VARCHAR(31)  NOT NULL,

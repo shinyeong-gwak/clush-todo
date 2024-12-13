@@ -64,7 +64,7 @@ public class NotificationService {
             sendNotification(uid,noti);
         }
     }
-
+    //유저가 브라우저에서 페이지를 열 때 연결.
     public SseEmitter connect(String userId) {
         SseEmitter emitter = new SseEmitter();
         emitters.put(userId,emitter);

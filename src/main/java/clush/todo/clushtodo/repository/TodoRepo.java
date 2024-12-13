@@ -16,26 +16,29 @@ import java.util.UUID;
 @Repository
 public interface TodoRepo extends JpaRepository<Todo,UUID> {
     @Transactional@Modifying
-    @Query("UPDATE Todo t SET t.complate = :now WHERE t.tid = :tid")
-    void updateComplate(@Param("tid") UUID tid, @Param("now") LocalDateTime now);
+    @Query("UPDATE Todo t SET t.complete = :now WHERE t.tid = :tid")
+    void updatecomplete(@Param("tid") UUID tid, @Param("now") LocalDateTime now);
 
     @Transactional@Modifying
     @Query("UPDATE Todo t SET t.delay = :b WHERE t.tid = :tid")
     void updateDelay(@Param("tid") UUID tid, @Param("b") boolean b);
 
-    @Query("SELECT new clush.todo.clushtodo.dto.ViewRes(t.tid,t.priority,t.complate,t.delay,t.name,t.category) FROM Todo t WHERE t.user.userId = :userId AND t.complate = null AND t.delay = false")
-    List<ViewRes> findAllByIdAndComplateFalseAndDelayFalse(@Param("userId") String userId);
+    @Query("SELECT new clush.todo.clushtodo.dto.ViewRes(t.tid,t.priority,t.complete,t.delay,t.name,t.category) FROM Todo t WHERE t.user.userId = :userId AND t.complete = null AND t.delay = false")
+    List<ViewRes> findAllByIdAndcompleteFalseAndDelayFalse(@Param("userId") String userId);
 
-    @Query("SELECT new clush.todo.clushtodo.dto.ViewRes(t.tid,t.priority,t.complate,t.delay,t.name,t.category) FROM Todo t WHERE t.user.userId = :userId AND t.complate != null")
-    List<ViewRes> findAllByIdAndComplateTrue(@Param("userId") String userId);
+    @Query("SELECT new clush.todo.clushtodo.dto.ViewRes(t.tid,t.priority,t.complete,t.delay,t.name,t.category) FROM Todo t WHERE t.user.userId = :userId AND t.complete != null")
+    List<ViewRes> findAllByIdAndcompleteTrue(@Param("userId") String userId);
 
-    @Query("SELECT new clush.todo.clushtodo.dto.ViewRes(t.tid,t.priority,t.complate,t.delay,t.name,t.category) FROM Todo t WHERE t.user.userId = :userId AND t.delay = true")
+    @Query("SELECT new clush.todo.clushtodo.dto.ViewRes(t.tid,t.priority,t.complete,t.delay,t.name,t.category) FROM Todo t WHERE t.user.userId = :userId AND t.delay = true")
     List<ViewRes> findAllByIdAndDelayTrue(@Param("userId") String userId);
 
-    @Query("DELETE FROM Todo t WHERE t.complate < :now")
-    void deleteAllByComplate(@Param("now") LocalDateTime now);
+    @Query("DELETE FROM Todo t WHERE t.complete < :now")
+    void deleteAllBycomplete(@Param("now") LocalDateTime now);
 
     @Transactional@Modifying
     @Query("UPDATE Todo t SET t.delay = true WHERE t.delay = false")
     void updateAllDelay();
+
+    @Query("SELECT t.user.userId FROM Todo t WHERE t.complete = null")
+    List<String> findUserAllByCompleteTrue();
 }

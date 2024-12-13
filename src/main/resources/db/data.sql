@@ -35,7 +35,7 @@ VALUES (UUID_TO_BIN(UUID(), 1), 'test', '독서', '2024-12-01 10:00:00', '2024-1
        (UUID_TO_BIN(UUID(), 1), 'test', '기념일 기획', '2024-12-07 12:00:00', '2024-12-07 14:00:00', TRUE, 2, 0);
 
 -- Insert todo entries for 'test' user
-INSERT INTO `todo` (`tid`, `user_id`, `name`, `priority`, `complate`, `delay`, `category`)
+INSERT INTO `todo` (`tid`, `user_id`, `name`, `priority`, `complete`, `delay`, `category`)
 VALUES (UUID_TO_BIN(UUID(), 1), 'test', '보고서 작성', 1, NULL, FALSE, '처리'),
        (UUID_TO_BIN(UUID(), 1), 'test', '운동하기', 10, '2024-12-01 08:00:00', FALSE, '루틴'),
        (UUID_TO_BIN(UUID(), 1), 'test', '친구와 만남', 20, '2024-12-10 18:00:00', FALSE, '오늘 선호'),

@@ -28,17 +28,17 @@ public class TodoController {
         return ResponseEntity.ok(new IdRes(todoSvc.addTodo(user,addReq.getTodo())));
     }
 
-    @PatchMapping("/{id}/complate/t")
-    public ResponseEntity<?> complateTodo(@PathVariable("id") String tid) {
+    @PatchMapping("/{id}/complete/t")
+    public ResponseEntity<?> completeTodo(@PathVariable("id") String tid) {
         UUID tId = UUID.fromString(tid);
-        todoSvc.complateTodo(tId);
+        todoSvc.completeTodo(tId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PatchMapping("/{id}/complate/f")
-    public ResponseEntity<?> complateUndoTodo(@PathVariable("id") String tid) {
+    @PatchMapping("/{id}/complete/f")
+    public ResponseEntity<?> completeUndoTodo(@PathVariable("id") String tid) {
         UUID tId = UUID.fromString(tid);
-        todoSvc.undoComplate(tId);
+        todoSvc.undocomplete(tId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -69,11 +69,11 @@ public class TodoController {
         return ResponseEntity.ok(todoSvc.getTodos(userId));
     }
 
-    @GetMapping("/complate")
-    public ResponseEntity<?> getTodosComplate(
+    @GetMapping("/complete")
+    public ResponseEntity<?> getTodoscomplete(
             @RequestParam("userId") String userId) throws CustomException {
         userSvc.validate(userId);
-        return ResponseEntity.ok(todoSvc.getTodosComplate(userId));
+        return ResponseEntity.ok(todoSvc.getTodoscomplete(userId));
     }
 
     @GetMapping("/delay")
