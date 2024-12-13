@@ -1,17 +1,19 @@
 package clush.todo.clushtodo.dto;
 
-import clush.todo.clushtodo.entity.Calendar;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
-@Data
+@Data@RequiredArgsConstructor@AllArgsConstructor
 public class Noti {
-    String userId;
+    @Nullable
     String tag;
+    @NonNull
+    String deco;
+    @NonNull
     String content;
 
-    public Noti(String userId, String msg, Calendar.Color tag, String deco) {
-        this.userId = userId;
-        this.tag = tag.name();
-        this.content = msg + "\n" + deco;
-    }
+
 }

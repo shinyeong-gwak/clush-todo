@@ -1,6 +1,7 @@
 package clush.todo.clushtodo.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ import java.util.UUID;
 public class Notification {
     @Id
     @Column(columnDefinition = "BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1))")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     UUID nid;
 
     String msg;
@@ -25,7 +26,4 @@ public class Notification {
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id")
     User user;
 
-    public String getContent() {
-        return String.format("(%s) %s\n%s\n",tag.name(),msg,deco);
-    }
 }
