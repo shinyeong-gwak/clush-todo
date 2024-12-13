@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 @Data@RequiredArgsConstructor@AllArgsConstructor
-public class Noti {
+public class NotiMsg {
     @Nullable
     String tag;
     @NonNull

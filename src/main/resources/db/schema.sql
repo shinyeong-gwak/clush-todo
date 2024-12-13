@@ -33,14 +33,4 @@ CREATE TABLE IF NOT EXISTS `todo`
     CONSTRAINT `FK_User_TO_Todo_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
 
-CREATE TABLE IF NOT EXISTS `notification`
-(
-    `nid`    BINARY(16)            DEFAULT (UUID_TO_BIN(UUID(), 1)) PRIMARY KEY,
-    `user_id` VARCHAR(31)  NOT NULL,
-    `msg`    VARCHAR(31)  NOT NULL,
-    `tag`    TINYINT      NULL,
-    `deco`   VARCHAR(255) NOT NULL,
-    `sent`   BOOL         NOT NULL DEFAULT FALSE,
-    `ring`	TIMESTAMP	NOT NULL,
-    CONSTRAINT `FK_User_TO_Notification_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-);
+ALTER TABLE calendar ADD COLUMN sent BOOLEAN DEFAULT FALSE;

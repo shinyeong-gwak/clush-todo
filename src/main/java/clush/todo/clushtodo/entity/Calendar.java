@@ -22,6 +22,9 @@ public class Calendar {
     Short depth;
     Color tag = Color.RED;
 
+    //알림을 위해 추가
+    Boolean sent = false;
+
     public enum Color {
         RED,ORANGE,YELLOW,GREEN,BLUE,PURPLE,PINK;
 

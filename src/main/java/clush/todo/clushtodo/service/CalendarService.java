@@ -1,6 +1,7 @@
 package clush.todo.clushtodo.service;
 
 import clush.todo.clushtodo.dto.Month;
+import clush.todo.clushtodo.dto.Notification;
 import clush.todo.clushtodo.dto.Schedule;
 import clush.todo.clushtodo.entity.Calendar;
 import clush.todo.clushtodo.entity.User;
@@ -9,6 +10,7 @@ import clush.todo.clushtodo.repository.CalendarRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,6 +26,9 @@ public class CalendarService {
 
     @Autowired
     CalendarRepo calRepo;
+
+    @Autowired
+    NotificationService notiSvc;
 
     public UUID addSchedule(User user, Schedule schedule) throws CustomException {
         Calendar saved = calRepo.saveAndFlush(Calendar.builder()
@@ -64,11 +69,26 @@ public class CalendarService {
                 .needNoti(newSchedule.getNeedNoti())
                 .depth(newSchedule.getDepth())
                 .build();
+
+
         calRepo.saveAndFlush(update);
         return update.getCid();
     }
 
     public void deleteSchedule(UUID cid) {
         calRepo.deleteById(cid);
+    }
+
+    // 매 분마다 알림 울릴 상태가 있는지 확인. (연결 유지 자원 소모)
+    @Scheduled(fixedRate = 60000)
+    public void delegateAlarm() {
+        LocalDateTime startTime = LocalDateTime.now().plusMinutes(10); //10분 뒤에 시작.
+        LocalDateTime s = startTime.minusSeconds(startTime.getSecond());
+        LocalDateTime e = startTime.plusSeconds(60-startTime.getSecond());
+
+        List<Notification> notifications = calRepo.findByRingBeforeAndSentFalse(s,e);
+        for (Notification notification : notifications) {
+            notiSvc.notify10MinutesLeft(notification);
+        }
     }
 }
