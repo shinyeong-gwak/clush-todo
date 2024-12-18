@@ -24,15 +24,15 @@ public class TodoServiceTest {
     private TodoRepo todoRepo;
 
     @InjectMocks
-    private TodoService todoService;
+    private TodoService todoSvc;
 
-    User user = new User("test", "password");
+    User user = new User("test", "user");
 
     @Test
     public void testAddTodo() {
         TaskReq.Task todo = new TaskReq.Task((short) 1,"Task", "category");
 
-        UUID result = todoService.addTodo(user, todo);
+        UUID result = todoSvc.addTodo(user, todo);
         assertNotNull(result);
         verify(todoRepo, times(1)).saveAndFlush(any(Todo.class));
     }
@@ -42,7 +42,7 @@ public class TodoServiceTest {
         UUID tid = UUID.randomUUID();
         doNothing().when(todoRepo).deleteById(tid);
 
-        todoService.deleteTodo(tid);
+        todoSvc.deleteTodo(tid);
 
         verify(todoRepo, times(1)).deleteById(tid);
     }
@@ -50,7 +50,7 @@ public class TodoServiceTest {
     @Test
     public void testCompleteTodo() {
         UUID tid = UUID.randomUUID();
-        todoService.completeTodo(tid);
+        todoSvc.completeTodo(tid);
 
         verify(todoRepo, times(1)).updateDelay(tid, false);
         verify(todoRepo, times(1)).updatecomplete(tid, any());
@@ -59,7 +59,7 @@ public class TodoServiceTest {
     @Test
     public void testUndoCompleteTodo() {
         UUID tid = UUID.randomUUID();
-        todoService.undocomplete(tid);
+        todoSvc.undocomplete(tid);
 
         verify(todoRepo, times(1)).updatecomplete(tid, null);
     }
@@ -67,7 +67,7 @@ public class TodoServiceTest {
     @Test
     public void testDelayTodo() {
         UUID tid = UUID.randomUUID();
-        todoService.delayTodo(tid);
+        todoSvc.delayTodo(tid);
 
         verify(todoRepo, times(1)).updatecomplete(tid, null);
         verify(todoRepo, times(1)).updateDelay(tid, true);
@@ -79,19 +79,19 @@ public class TodoServiceTest {
         List<ViewRes> todos = new ArrayList<>();
         when(todoRepo.findAllByIdAndcompleteFalseAndDelayFalse(userId)).thenReturn(todos);
 
-        List<ViewRes> result = todoService.getTodos(userId);
+        List<ViewRes> result = todoSvc.getTodos(userId);
         assertNotNull(result);
         verify(todoRepo, times(1)).findAllByIdAndcompleteFalseAndDelayFalse(userId);
     }
 
     @Test
     public void testCleaning() {
-        doNothing().when(todoRepo).deleteAllBycomplete(any());
+        doNothing().when(todoRepo).deleteAllBycompleteBefore(any());
         doNothing().when(todoRepo).updateAllDelay();
 
-        todoService.cleaning();
+        todoSvc.cleaning();
 
-        verify(todoRepo, times(1)).deleteAllBycomplete(any());
+        verify(todoRepo, times(1)).deleteAllBycompleteBefore(any());
         verify(todoRepo, times(1)).updateAllDelay();
     }
 }

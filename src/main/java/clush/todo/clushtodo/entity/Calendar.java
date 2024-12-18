@@ -7,7 +7,7 @@ import lombok.*;
 
 @Entity@Builder
 @AllArgsConstructor@RequiredArgsConstructor
-@Getter
+@Data
 public class Calendar {
     @Id @Column(columnDefinition = "BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1))")
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `calendar`
     `need_noti` BOOL         NULL     DEFAULT FALSE,
     `depth`     SMALLINT     NULL     DEFAULT 1,
     `tag`       TINYINT               DEFAULT 0,
+    `sent`      BOOL              DEFAULT FALSE,
     CONSTRAINT `FK_User_TO_Calendar_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
 
@@ -27,10 +28,8 @@ CREATE TABLE IF NOT EXISTS `todo`
     `user_id`  VARCHAR(31)  NOT NULL,
     `priority` SMALLINT     NULL,
     `complete` TIMESTAMP    NULL,
-    `delay`    BOOL         NULL DEFAULT FALSE,
+    `delay`    BOOL         NOT NULL DEFAULT FALSE,
     `name`     VARCHAR(255) NULL,
     `category` VARCHAR(31)  NOT NULL,
     CONSTRAINT `FK_User_TO_Todo_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
-
-ALTER TABLE calendar ADD COLUMN sent BOOLEAN DEFAULT FALSE;

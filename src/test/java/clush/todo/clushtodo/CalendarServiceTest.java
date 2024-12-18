@@ -81,7 +81,7 @@ public class CalendarServiceTest {
     }
 
     @Test
-    public void testEditSchedule() {
+    public void testEditSchedule() throws CustomException {
         UUID cid = UUID.randomUUID();
         Schedule newSchedule = new Schedule(cid, "Updated Meeting", LocalDateTime.now(), LocalDateTime.now().plusHours(2), true, (short) 2, "ORANGE");
 
@@ -95,8 +95,7 @@ public class CalendarServiceTest {
                 .build();
 
         when(calRepo.saveAndFlush(any(Calendar.class))).thenReturn(updatedCalendar);
-
-        UUID result = calSvc.editSchedule(cid, newSchedule);
+        UUID result = calSvc.editSchedule(cid, user, newSchedule);
         assertEquals(cid, result);
         verify(calRepo, times(1)).saveAndFlush(any(Calendar.class));
     }

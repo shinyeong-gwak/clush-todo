@@ -32,6 +32,7 @@ public class TodoService {
                 .name(todo.getName())
                 .category(todo.getCategory())
                 .priority(todo.getPriority())
+                .delay(false)
                 .build());
         
         return saved.getTid();
@@ -78,18 +79,21 @@ public class TodoService {
     }
 
 
-    @Scheduled(cron = "0 4 * * * *")
+    @Scheduled(cron = "0 0 19 * * *")
     public void cleaning() {
         // 이전날 완료한 항목 지우기
-        todoRepo.deleteAllBycomplete(LocalDateTime.now());
+        todoRepo.deleteAllBycompleteBefore(LocalDateTime.now());
         // 아직 완료되지 않는 항목 미완료 풀로 이동시키기
         todoRepo.updateAllDelay();
     }
 
     // 할일을 완료하지 않는 사람들의 리스트를 가져다 줌.
-    @Scheduled(cron= "50 3 * * * *")
+    @Scheduled(cron= "0 50 18 * * *")
     public void delegateNotify() {
         List<String> userList=  todoRepo.findUserAllByCompleteTrue();
         notiSvc.notifyUncompletedTodo(userList);
+    }
+
+    public void patchPriority() {
     }
 }

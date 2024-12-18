@@ -19,8 +19,8 @@ import java.util.UUID;
 @Repository
 public interface CalendarRepo extends JpaRepository<Calendar, UUID> {
     @Query("SELECT new clush.todo.clushtodo.dto.Month(c.name,c.start,c.end,c.tag) FROM Calendar c WHERE c.user.userId = :userId AND (c.start <= :end OR c.end >= :start ) ")
-    List<Month> findAllByMonth(@Param("start") LocalDate start,
-                               @Param("end") LocalDate end,
+    List<Month> findAllByMonth(@Param("start") LocalDateTime start,
+                               @Param("end") LocalDateTime end,
                                @Param("userId") String userId);
     @Query("SELECT new clush.todo.clushtodo.dto.Schedule(c.cid, c.name,c.start,c.end,c.needNoti,c.depth,c.tag) FROM Calendar c WHERE c.user.userId = :userId AND (c.start <= :end OR c.end >= :start ) ")
     List<Schedule> findAllByDay(@Param("start") LocalDateTime start,

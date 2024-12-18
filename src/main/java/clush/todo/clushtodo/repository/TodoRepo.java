@@ -32,8 +32,7 @@ public interface TodoRepo extends JpaRepository<Todo,UUID> {
     @Query("SELECT new clush.todo.clushtodo.dto.ViewRes(t.tid,t.priority,t.complete,t.delay,t.name,t.category) FROM Todo t WHERE t.user.userId = :userId AND t.delay = true")
     List<ViewRes> findAllByIdAndDelayTrue(@Param("userId") String userId);
 
-    @Query("DELETE FROM Todo t WHERE t.complete < :now")
-    void deleteAllBycomplete(@Param("now") LocalDateTime now);
+    void deleteAllBycompleteBefore(LocalDateTime now);
 
     @Transactional@Modifying
     @Query("UPDATE Todo t SET t.delay = true WHERE t.delay = false")
@@ -41,4 +40,5 @@ public interface TodoRepo extends JpaRepository<Todo,UUID> {
 
     @Query("SELECT t.user.userId FROM Todo t WHERE t.complete = null")
     List<String> findUserAllByCompleteTrue();
+
 }

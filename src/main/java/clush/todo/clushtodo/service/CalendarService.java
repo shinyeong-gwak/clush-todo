@@ -3,6 +3,7 @@ package clush.todo.clushtodo.service;
 import clush.todo.clushtodo.dto.Month;
 import clush.todo.clushtodo.dto.Notification;
 import clush.todo.clushtodo.dto.Schedule;
+import clush.todo.clushtodo.dto.ScheduleReq;
 import clush.todo.clushtodo.entity.Calendar;
 import clush.todo.clushtodo.entity.User;
 import clush.todo.clushtodo.error.CustomException;
@@ -17,8 +18,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+import static clush.todo.clushtodo.error.CustomResponse.BAD_REQUEST;
 import static clush.todo.clushtodo.error.CustomResponse.DATA_NOT_SAVED;
 
 @Service @Slf4j @RequiredArgsConstructor
@@ -49,8 +52,8 @@ public class CalendarService {
 
     //상세 보기 x : 캘린더에 뜰 정보만 리턴하기
     public List<Month> getSchedules(LocalDate date, String userId) {
-        LocalDate monthStart = date.withDayOfMonth(1);
-        LocalDate monthEnd = date.withDayOfMonth(date.lengthOfMonth());
+        LocalDateTime monthStart = date.withDayOfMonth(1).atStartOfDay();
+        LocalDateTime monthEnd = date.withDayOfMonth(date.lengthOfMonth()).atTime(23,59);
         return calRepo.findAllByMonth(monthStart,monthEnd, userId);
     }
 
@@ -60,19 +63,40 @@ public class CalendarService {
         return calRepo.findAllByDay(start,end,userId);
     }
 
-    public UUID editSchedule(UUID cid, Schedule newSchedule) {
-        Calendar update = Calendar.builder()
-                .cid(cid)
-                .name(newSchedule.getName())
-                .start(newSchedule.getStart())
-                .end(newSchedule.getEnd())
-                .needNoti(newSchedule.getNeedNoti())
-                .depth(newSchedule.getDepth())
-                .build();
+    public UUID editSchedule(UUID cid, User user, Schedule newSchedule) throws CustomException {
 
+        Optional<Calendar> existingCalendar = calRepo.findById(cid); // CID로 기존 데이터 조회
 
-        calRepo.saveAndFlush(update);
-        return update.getCid();
+        if (existingCalendar.isPresent()) {
+            // 새로운 값이 null이 아니면 set, 아니면 기존 값 유지
+            Calendar calendar = existingCalendar.get();
+            calendar.setUser(user);
+            if (newSchedule.getName() != null) {
+                calendar.setName(newSchedule.getName());
+            }
+            if (newSchedule.getStart() != null) {
+                calendar.setStart(newSchedule.getStart());
+            }
+            if (newSchedule.getEnd() != null) {
+                calendar.setEnd(newSchedule.getEnd());
+            }
+            if (newSchedule.getNeedNoti() != null) {
+                calendar.setNeedNoti(newSchedule.getNeedNoti());
+            }
+            if (newSchedule.getDepth() != null) {
+                calendar.setDepth(newSchedule.getDepth());
+            }
+            if (newSchedule.getTag() != null) {
+                calendar.setTag(Calendar.Color.valueOf(newSchedule.getTag()));
+            }
+
+            // 업데이트된 객체 저장
+            calRepo.saveAndFlush(existingCalendar.get());
+            return existingCalendar.get().getCid();
+        } else {
+            // 만약 기존 데이터가 없다면 적절한 처리 (예: 예외 처리)
+            throw new CustomException(BAD_REQUEST);
+        }
     }
 
     public void deleteSchedule(UUID cid) {

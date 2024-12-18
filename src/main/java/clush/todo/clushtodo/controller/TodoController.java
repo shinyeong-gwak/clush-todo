@@ -82,5 +82,11 @@ public class TodoController {
         return ResponseEntity.ok(todoSvc.getTodosDelay(userId));
     }
 
+    @PatchMapping("/{id}/order")
+    public ResponseEntity<?> switchOrder() {
+        todoSvc.patchPriority();
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
 
 }
