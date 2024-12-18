@@ -1,5 +1,3 @@
 package clush.todo.clushtodo.dto;
 
-import java.util.UUID;
-
-public record IdRes(UUID id){}
+public record IdRes(Long id){}

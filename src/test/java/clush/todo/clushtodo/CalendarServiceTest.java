@@ -35,7 +35,7 @@ public class CalendarServiceTest {
     User user = new User("test", "user");
     @Test
     public void testAddSchedule() throws CustomException {
-        Schedule schedule = new Schedule(UUID.randomUUID(), "교수님 미팅", LocalDateTime.now(), LocalDateTime.now().plusHours(1), false, (short) 1, "YELLOW");
+        Schedule schedule = new Schedule(10L,"교수님 미팅", LocalDateTime.now(), LocalDateTime.now().plusHours(1), false, (short) 1, "YELLOW");
 
         Calendar calendar = Calendar.builder()
                 .user(user)
@@ -82,7 +82,7 @@ public class CalendarServiceTest {
 
     @Test
     public void testEditSchedule() throws CustomException {
-        UUID cid = UUID.randomUUID();
+        Long cid = 10L;
         Schedule newSchedule = new Schedule(cid, "Updated Meeting", LocalDateTime.now(), LocalDateTime.now().plusHours(2), true, (short) 2, "ORANGE");
 
         Calendar updatedCalendar = Calendar.builder()
@@ -95,14 +95,14 @@ public class CalendarServiceTest {
                 .build();
 
         when(calRepo.saveAndFlush(any(Calendar.class))).thenReturn(updatedCalendar);
-        UUID result = calSvc.editSchedule(cid, user, newSchedule);
+        Long result = calSvc.editSchedule(cid, user, newSchedule);
         assertEquals(cid, result);
         verify(calRepo, times(1)).saveAndFlush(any(Calendar.class));
     }
 
     @Test
     public void testDeleteSchedule() {
-        UUID cid = UUID.randomUUID();
+        Long cid = 10L;
         doNothing().when(calRepo).deleteById(cid);
 
         calSvc.deleteSchedule(cid);

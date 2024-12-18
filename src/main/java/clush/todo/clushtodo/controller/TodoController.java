@@ -30,35 +30,35 @@ public class TodoController {
 
     @PatchMapping("/{id}/complete/t")
     public ResponseEntity<?> completeTodo(@PathVariable("id") String tid) {
-        UUID tId = UUID.fromString(tid);
+        Long tId = Long.parseLong(tid);
         todoSvc.completeTodo(tId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/complete/f")
     public ResponseEntity<?> completeUndoTodo(@PathVariable("id") String tid) {
-        UUID tId = UUID.fromString(tid);
+        Long tId = Long.parseLong(tid);
         todoSvc.undocomplete(tId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/delay")
     public ResponseEntity<?> delayTodo(@PathVariable("id") String tid) {
-        UUID tId = UUID.fromString(tid);
+        Long tId = Long.parseLong(tid);
         todoSvc.delayTodo(tId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTodo(@PathVariable("id") String tid) {
-        UUID tId = UUID.fromString(tid);
+        Long tId = Long.parseLong(tid);
         todoSvc.deleteTodo(tId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> editTodo(@PathVariable("id") String tid, @RequestBody TaskReq.Task newTodo) throws CustomException {
-        UUID tId = UUID.fromString(tid);
+        Long tId = Long.parseLong(tid);
         todoSvc.editTodo(tId,newTodo);
         return ResponseEntity.ok(HttpStatus.OK);
     }

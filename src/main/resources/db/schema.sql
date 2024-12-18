@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `user`
 
 CREATE TABLE IF NOT EXISTS `calendar`
 (
-    `cid`       BINARY(16)            DEFAULT (UUID_TO_BIN(UUID(), 1)) PRIMARY KEY,
+    `cid`       BIGINT AUTO_INCREMENT  PRIMARY KEY,
     `user_id`   VARCHAR(31)  NOT NULL,
     `name`      VARCHAR(255) NOT NULL DEFAULT '이벤트',
     `start`     TIMESTAMP    NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `calendar`
 
 CREATE TABLE IF NOT EXISTS `todo`
 (
-    `tid`      BINARY(16)        DEFAULT (UUID_TO_BIN(UUID(), 1)) PRIMARY KEY,
+    `tid`      BIGINT AUTO_INCREMENT  PRIMARY KEY,
     `user_id`  VARCHAR(31)  NOT NULL,
     `priority` SMALLINT     NULL,
     `complete` TIMESTAMP    NULL,

@@ -9,9 +9,9 @@ import lombok.*;
 @AllArgsConstructor@RequiredArgsConstructor
 @Data
 public class Calendar {
-    @Id @Column(columnDefinition = "BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1))")
-    @GeneratedValue(strategy = GenerationType.UUID)
-    UUID cid;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long cid;
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id")
     User user;
     String name = "이벤트";

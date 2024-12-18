@@ -33,7 +33,7 @@ public class CalendarService {
     @Autowired
     NotificationService notiSvc;
 
-    public UUID addSchedule(User user, Schedule schedule) throws CustomException {
+    public Long addSchedule(User user, Schedule schedule) throws CustomException {
         Calendar saved = calRepo.saveAndFlush(Calendar.builder()
                         .user(user)
                         .start(schedule.getStart())
@@ -63,7 +63,7 @@ public class CalendarService {
         return calRepo.findAllByDay(start,end,userId);
     }
 
-    public UUID editSchedule(UUID cid, User user, Schedule newSchedule) throws CustomException {
+    public Long editSchedule(Long cid, User user, Schedule newSchedule) throws CustomException {
 
         Optional<Calendar> existingCalendar = calRepo.findById(cid); // CID로 기존 데이터 조회
 
@@ -99,7 +99,7 @@ public class CalendarService {
         }
     }
 
-    public void deleteSchedule(UUID cid) {
+    public void deleteSchedule(Long cid) {
         calRepo.deleteById(cid);
     }
 

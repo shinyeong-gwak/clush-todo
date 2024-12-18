@@ -11,17 +11,16 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
-public interface TodoRepo extends JpaRepository<Todo,UUID> {
+public interface TodoRepo extends JpaRepository<Todo,Long> {
     @Transactional@Modifying
     @Query("UPDATE Todo t SET t.complete = :now WHERE t.tid = :tid")
-    void updatecomplete(@Param("tid") UUID tid, @Param("now") LocalDateTime now);
+    void updatecomplete(@Param("tid") Long tid, @Param("now") LocalDateTime now);
 
     @Transactional@Modifying
     @Query("UPDATE Todo t SET t.delay = :b WHERE t.tid = :tid")
-    void updateDelay(@Param("tid") UUID tid, @Param("b") boolean b);
+    void updateDelay(@Param("tid") Long tid, @Param("b") boolean b);
 
     @Query("SELECT new clush.todo.clushtodo.dto.ViewRes(t.tid,t.priority,t.complete,t.delay,t.name,t.category) FROM Todo t WHERE t.user.userId = :userId AND t.complete = null AND t.delay = false")
     List<ViewRes> findAllByIdAndcompleteFalseAndDelayFalse(@Param("userId") String userId);

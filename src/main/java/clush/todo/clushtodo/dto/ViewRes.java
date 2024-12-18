@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data@AllArgsConstructor
 public class ViewRes {
-    UUID tid;
+    Long tid;
 
     Short priority;
     LocalDateTime complete;

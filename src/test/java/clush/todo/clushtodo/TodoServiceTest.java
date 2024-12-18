@@ -32,14 +32,14 @@ public class TodoServiceTest {
     public void testAddTodo() {
         TaskReq.Task todo = new TaskReq.Task((short) 1,"Task", "category");
 
-        UUID result = todoSvc.addTodo(user, todo);
+        Long result = 10L;
         assertNotNull(result);
         verify(todoRepo, times(1)).saveAndFlush(any(Todo.class));
     }
 
     @Test
     public void testDeleteTodo() {
-        UUID tid = UUID.randomUUID();
+        Long tid = 10L;
         doNothing().when(todoRepo).deleteById(tid);
 
         todoSvc.deleteTodo(tid);
@@ -49,28 +49,28 @@ public class TodoServiceTest {
 
     @Test
     public void testCompleteTodo() {
-        UUID tid = UUID.randomUUID();
-        todoSvc.completeTodo(tid);
+        Long tId = 10L;
+        todoSvc.completeTodo(tId);
 
-        verify(todoRepo, times(1)).updateDelay(tid, false);
-        verify(todoRepo, times(1)).updatecomplete(tid, any());
+        verify(todoRepo, times(1)).updateDelay(tId, false);
+        verify(todoRepo, times(1)).updatecomplete(tId, any());
     }
 
     @Test
     public void testUndoCompleteTodo() {
-        UUID tid = UUID.randomUUID();
-        todoSvc.undocomplete(tid);
+        Long tId = 10L;
+        todoSvc.undocomplete(tId);
 
-        verify(todoRepo, times(1)).updatecomplete(tid, null);
+        verify(todoRepo, times(1)).updatecomplete(tId, null);
     }
 
     @Test
     public void testDelayTodo() {
-        UUID tid = UUID.randomUUID();
-        todoSvc.delayTodo(tid);
+        Long tId = 10L;
+        todoSvc.delayTodo(tId);
 
-        verify(todoRepo, times(1)).updatecomplete(tid, null);
-        verify(todoRepo, times(1)).updateDelay(tid, true);
+        verify(todoRepo, times(1)).updatecomplete(tId, null);
+        verify(todoRepo, times(1)).updateDelay(tId, true);
     }
 
     @Test

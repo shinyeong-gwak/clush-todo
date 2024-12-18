@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data@AllArgsConstructor@NoArgsConstructor
 public class Schedule {
     @Nullable
-    private UUID cid;
+    private Long cid;
     private String name;
     private LocalDateTime start;
     private LocalDateTime end;
@@ -21,7 +21,7 @@ public class Schedule {
     private Short depth;
     private String tag;
 
-    public Schedule(UUID cid, String name, LocalDateTime start, LocalDateTime end, Boolean needNoti, Short depth, Calendar.Color tag) {
+    public Schedule(Long cid, String name, LocalDateTime start, LocalDateTime end, Boolean needNoti, Short depth, Calendar.Color tag) {
         this.cid = cid;
         this.name = name;
         this.start = start;

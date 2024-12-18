@@ -26,7 +26,7 @@ public class TodoService {
     @Autowired
     NotificationService notiSvc;
 
-    public UUID addTodo(User user, TaskReq.Task todo) {
+    public Long addTodo(User user, TaskReq.Task todo) {
         Todo saved = todoRepo.saveAndFlush(Todo.builder()
                 .user(user)
                 .name(todo.getName())
@@ -38,25 +38,25 @@ public class TodoService {
         return saved.getTid();
     }
 
-    public void deleteTodo(UUID tid) {
+    public void deleteTodo(Long tid) {
         todoRepo.deleteById(tid);
     }
 
-    public void completeTodo(UUID tid) {
+    public void completeTodo(Long tid) {
         todoRepo.updateDelay(tid,false);
         todoRepo.updatecomplete(tid, LocalDateTime.now());
     }
 
-    public void undocomplete(UUID tid) {
+    public void undocomplete(Long tid) {
         todoRepo.updatecomplete(tid, null);
     }
 
-    public void delayTodo(UUID tid) {
+    public void delayTodo(Long tid) {
         todoRepo.updatecomplete(tid,null);
         todoRepo.updateDelay(tid,true);
     }
 
-    public void editTodo(UUID tid, TaskReq.Task newTodo) throws CustomException {
+    public void editTodo(Long tid, TaskReq.Task newTodo) throws CustomException {
         Todo todo = todoRepo.findById(tid).orElseThrow( () -> new CustomException(CustomResponse.NOT_FOUND) );
 
         Optional.ofNullable(newTodo.getName()).ifPresent(todo::setName);

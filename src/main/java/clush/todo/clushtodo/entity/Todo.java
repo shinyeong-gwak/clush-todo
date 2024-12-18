@@ -10,9 +10,9 @@ import java.util.UUID;
 @Entity@Builder@Data
 @RequiredArgsConstructor@AllArgsConstructor
 public class Todo {
-    @Id @Column(columnDefinition = "BINARY(16) DEFAULT (UUID_TO_BIN(UUID(), 1))")// DEFAULT (UUID_TO_BIN(UUID(), 1))
-    @GeneratedValue(strategy = GenerationType.UUID)
-    UUID tid;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long tid;
     Short priority;
     @Nullable
     LocalDateTime complete;
