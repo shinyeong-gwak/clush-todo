@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'clush.todo'
-version = '0.0.2-INIT' // SNAPSHOT RELEASE'
+version = '0.0.2-RELEASE' // SNAPSHOT RELEASE'
 
 java {
     toolchain {
@@ -20,6 +20,10 @@ jib {
         platforms {
             platform {
                 architecture = 'arm64'
+                os = 'linux'
+            }
+            platform {
+                architecture = 'amd64'
                 os = 'linux'
             }
         }
