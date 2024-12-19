@@ -22,22 +22,24 @@ public interface TodoRepo extends JpaRepository<Todo,Long> {
     @Query("UPDATE Todo t SET t.delay = :b WHERE t.tid = :tid")
     void updateDelay(@Param("tid") Long tid, @Param("b") boolean b);
 
-    @Query("SELECT new clush.todo.clushtodo.dto.ViewRes(t.tid,t.priority,t.complete,t.delay,t.name,t.category) FROM Todo t WHERE t.user.userId = :userId AND t.complete = null AND t.delay = false")
-    List<ViewRes> findAllByIdAndcompleteFalseAndDelayFalse(@Param("userId") String userId);
+    @Query("SELECT new clush.todo.clushtodo.dto.ViewRes(t.tid,t.priority,t.complete,t.delay,t.name,t.category) FROM Todo t WHERE t.userId = :userId AND t.delay = false")
+    List<ViewRes> findAllByIdAndDelayFalse(@Param("userId") String userId);
 
-    @Query("SELECT new clush.todo.clushtodo.dto.ViewRes(t.tid,t.priority,t.complete,t.delay,t.name,t.category) FROM Todo t WHERE t.user.userId = :userId AND t.complete != null")
+
+    @Query("SELECT new clush.todo.clushtodo.dto.ViewRes(t.tid,t.priority,t.complete,t.delay,t.name,t.category) FROM Todo t WHERE t.userId = :userId AND t.complete IS NOT null")
     List<ViewRes> findAllByIdAndcompleteTrue(@Param("userId") String userId);
 
     @Query("SELECT new clush.todo.clushtodo.dto.ViewRes(t.tid,t.priority,t.complete,t.delay,t.name,t.category) FROM Todo t WHERE t.user.userId = :userId AND t.delay = true")
     List<ViewRes> findAllByIdAndDelayTrue(@Param("userId") String userId);
 
-    void deleteAllBycompleteBefore(LocalDateTime now);
+    @Transactional@Modifying
+    void deleteAllByCompleteNotNullAndCompleteBefore(LocalDateTime now);
 
     @Transactional@Modifying
     @Query("UPDATE Todo t SET t.delay = true WHERE t.delay = false")
     void updateAllDelay();
 
-    @Query("SELECT t.user.userId FROM Todo t WHERE t.complete = null")
-    List<String> findUserAllByCompleteTrue();
+    @Query("SELECT DISTINCT t.userId FROM Todo t WHERE t.complete IS null")
+    List<String> findUserIdAllByCompleteTrue();
 
 }
