@@ -1,15 +1,24 @@
 version: '3'
 services:
+  front:
+    image: shinyenggwak/clush-todo-front:0.0.1-SNAPSHOT
+    networks:
+      - my_network
+    ports:
+      - "0.0.0.0:3000:3000"
+    environment:
+      REACT_APP_API_URL: spring-app:8080
+
   spring-app:
-    image: shinyenggwak/clush-todo-back:0.0.1-INIT
+    image: shinyenggwak/clush-todo-back:0.0.2-RELEASE
     networks:
       - my_network
     ports:
       - "0.0.0.0:8080:8080"
     environment:
-      - DB_NAME = root
-      - DB_PASS = rootsygwak
-      - DB_URL = jdbc:mysql://localhost:3306/clush?useUnicode=true&characterEncoding=utf8
+      DBNAME : root
+      DBPASS : rootsygwak
+      DBURL : jdbc:mysql://mysql:3306/clush?useUnicode=true&characterEncoding=utf8
 
   mysql:
     image: "mysql"
@@ -21,9 +30,10 @@ services:
       - ./data:/var/lib/mysql
       - ./src/main/resources/db/schema.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
-      - MYSQL_ROOT_PASSWORD=rootsygwak
-      - MYSQL_DATABASE=clush
+      MYSQL_ROOT_PASSWORD: rootsygwak
+      MYSQL_DATABASE: clush
 #      - MYSQL_USER = clush
 #      - MYSQL_PASSWORD = sygwak
+
 networks:
   my_network:
