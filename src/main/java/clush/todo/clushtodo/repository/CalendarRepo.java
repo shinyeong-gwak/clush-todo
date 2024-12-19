@@ -24,6 +24,7 @@ public interface CalendarRepo extends JpaRepository<Calendar, Long> {
                                 @Param("userId") String userId);
 
 
+
     @Query("SELECT new clush.todo.clushtodo.dto.Notification(c.userId,c.name,c.tag)  FROM Calendar c WHERE ( c.start BETWEEN :now1 AND :now2 ) AND c.sent=false AND c.needNoti =true")
     List<Notification> findByRingBeforeAndSentFalse(@Param("now1") LocalDateTime now1, @Param("now2") LocalDateTime now2);
 }

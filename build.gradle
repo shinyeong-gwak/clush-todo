@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'clush.todo'
-version = '0.0.2-RELEASE' // SNAPSHOT RELEASE'
+version = '0.0.3-RELEASE' // SNAPSHOT RELEASE'
 
 java {
     toolchain {

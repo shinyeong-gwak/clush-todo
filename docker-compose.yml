@@ -10,7 +10,7 @@ services:
       REACT_APP_API_URL: spring-app:8080
 
   spring-app:
-    image: shinyenggwak/clush-todo-back:0.0.2-RELEASE
+    image: shinyenggwak/clush-todo-back:0.0.3-RELEASE
     networks:
       - my_network
     ports:
