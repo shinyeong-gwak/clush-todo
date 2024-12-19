@@ -12,7 +12,9 @@ public class Calendar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long cid;
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id")
+    @Column(name = "user_id")
+    String userId;
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id", insertable = false, updatable = false)
     User user;
     String name = "이벤트";
     LocalDateTime start;
