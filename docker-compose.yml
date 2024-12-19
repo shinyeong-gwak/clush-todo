@@ -29,6 +29,7 @@ services:
     volumes:
       - ./data:/var/lib/mysql
       - ./src/main/resources/db/schema.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./src/main/resources/db/data.sql:/docker-entrypoint-initdb.d/data.sql
     environment:
       MYSQL_ROOT_PASSWORD: rootsygwak
       MYSQL_DATABASE: clush
