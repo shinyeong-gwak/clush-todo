@@ -95,7 +95,7 @@ public class CalendarServiceTest {
                 .build();
 
         when(calRepo.saveAndFlush(any(Calendar.class))).thenReturn(updatedCalendar);
-        Long result = calSvc.editSchedule(cid, user, newSchedule);
+        Long result = calSvc.editSchedule(cid, user.getUserId(), newSchedule);
         assertEquals(cid, result);
         verify(calRepo, times(1)).saveAndFlush(any(Calendar.class));
     }

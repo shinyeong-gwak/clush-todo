@@ -28,8 +28,8 @@ public class CalendarController {
 
     @PostMapping
     public ResponseEntity<?> addSchedule(@RequestBody ScheduleReq addReq) throws CustomException {
-        User user = userSvc.validate(addReq.getUserId());
-        return ResponseEntity.ok(new IdRes(calSvc.addSchedule(user,addReq.getSchedule())));
+        userSvc.validate(addReq.getUserId());
+        return ResponseEntity.ok(new IdRes(calSvc.addSchedule(addReq.getUserId(), addReq.getSchedule())));
     }
 
     @GetMapping("/month")
@@ -47,9 +47,9 @@ public class CalendarController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?>  editSchedule(@PathVariable(name = "id") String cid, @RequestBody ScheduleReq newSchedule) throws CustomException {
-        User user = userSvc.validate(newSchedule.getUserId());
-         Long cId = Long.parseLong(cid);
-        return ResponseEntity.ok(new IdRes(calSvc.editSchedule(cId,user,newSchedule.getSchedule())));
+        userSvc.validate(newSchedule.getUserId());
+        Long cId = Long.parseLong(cid);
+        return ResponseEntity.ok(new IdRes(calSvc.editSchedule(cId,newSchedule.getUserId(),newSchedule.getSchedule())));
     }
 
     @DeleteMapping("/{id}")

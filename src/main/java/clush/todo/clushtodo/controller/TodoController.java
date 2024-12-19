@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/todo")
 public class TodoController {
@@ -24,8 +22,8 @@ public class TodoController {
 
     @PostMapping
     public ResponseEntity<?> addTodo(@RequestBody TaskReq addReq) throws CustomException {
-        User user = userSvc.validate(addReq.getUserId());
-        return ResponseEntity.ok(new IdRes(todoSvc.addTodo(user,addReq.getTodo())));
+        userSvc.validate(addReq.getUserId());
+        return ResponseEntity.ok(new IdRes(todoSvc.addTodo(addReq.getUserId(), addReq.getTodo())));
     }
 
     @PatchMapping("/{id}/complete/t")
@@ -43,9 +41,9 @@ public class TodoController {
     }
 
     @PatchMapping("/{id}/delay")
-    public ResponseEntity<?> delayTodo(@PathVariable("id") String tid) {
+    public ResponseEntity<?> delayTodo(@PathVariable("id") String tid,@RequestParam("delay") Boolean delay) {
         Long tId = Long.parseLong(tid);
-        todoSvc.delayTodo(tId);
+        todoSvc.delayTodo(tId,delay);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

@@ -32,10 +32,12 @@ public class NotificationService {
     public void sendNotification(String userId, NotiMsg noti) {
 
         try {
-            emitters.get(userId).send(SseEmitter.event().name("알림").data(noti.getContent()));
+            emitters.get(userId).send(SseEmitter.event().name("알림").data(noti));
         } catch (NullPointerException ne){
         } catch (IOException e) {
             emitters.remove(emitters.get(userId));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -48,7 +50,7 @@ public class NotificationService {
     }
     //유저가 브라우저에서 페이지를 열 때 연결.
     public SseEmitter connect(String userId) {
-        SseEmitter emitter = new SseEmitter();
+        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         emitters.put(userId,emitter);
 
         emitter.onCompletion(() -> emitters.remove(emitter));

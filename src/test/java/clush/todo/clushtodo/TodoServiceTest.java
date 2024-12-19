@@ -12,7 +12,6 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -67,7 +66,7 @@ public class TodoServiceTest {
     @Test
     public void testDelayTodo() {
         Long tId = 10L;
-        todoSvc.delayTodo(tId);
+        todoSvc.delayTodo(tId,true);
 
         verify(todoRepo, times(1)).updatecomplete(tId, null);
         verify(todoRepo, times(1)).updateDelay(tId, true);
@@ -77,11 +76,11 @@ public class TodoServiceTest {
     public void testGetTodos() {
         String userId = "test";
         List<ViewRes> todos = new ArrayList<>();
-        when(todoRepo.findAllByIdAndcompleteFalseAndDelayFalse(userId)).thenReturn(todos);
+        when(todoRepo.findAllByIdAndDelayFalse(userId)).thenReturn(todos);
 
         List<ViewRes> result = todoSvc.getTodos(userId);
         assertNotNull(result);
-        verify(todoRepo, times(1)).findAllByIdAndcompleteFalseAndDelayFalse(userId);
+        verify(todoRepo, times(1)).findAllByIdAndDelayFalse(userId);
     }
 
     @Test

@@ -3,7 +3,6 @@ package clush.todo.clushtodo.service;
 import clush.todo.clushtodo.dto.TaskReq;
 import clush.todo.clushtodo.dto.ViewRes;
 import clush.todo.clushtodo.entity.Todo;
-import clush.todo.clushtodo.entity.User;
 import clush.todo.clushtodo.error.CustomException;
 import clush.todo.clushtodo.error.CustomResponse;
 import clush.todo.clushtodo.repository.TodoRepo;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service@Slf4j@RequiredArgsConstructor
 public class TodoService {
@@ -26,9 +24,9 @@ public class TodoService {
     @Autowired
     NotificationService notiSvc;
 
-    public Long addTodo(User user, TaskReq.Task todo) {
+    public Long addTodo(String userId, TaskReq.Task todo) {
         Todo saved = todoRepo.saveAndFlush(Todo.builder()
-                .user(user)
+                .userId(userId)
                 .name(todo.getName())
                 .category(todo.getCategory())
                 .priority(todo.getPriority())
@@ -51,9 +49,9 @@ public class TodoService {
         todoRepo.updatecomplete(tid, null);
     }
 
-    public void delayTodo(Long tid) {
+    public void delayTodo(Long tid,Boolean delay) {
         todoRepo.updatecomplete(tid,null);
-        todoRepo.updateDelay(tid,true);
+        todoRepo.updateDelay(tid,delay);
     }
 
     public void editTodo(Long tid, TaskReq.Task newTodo) throws CustomException {
@@ -65,9 +63,8 @@ public class TodoService {
 
         todoRepo.saveAndFlush(todo);
     }
-
     public List<ViewRes> getTodos(String userId) {
-        return todoRepo.findAllByIdAndcompleteFalseAndDelayFalse(userId);
+        return todoRepo.findAllByIdAndDelayFalse(userId);
     }
 
     public List<ViewRes> getTodoscomplete(String userId) {
@@ -79,19 +76,22 @@ public class TodoService {
     }
 
 
-    @Scheduled(cron = "0 0 19 * * *")
+    @Scheduled(cron = "0 0 4 * * *")
     public void cleaning() {
         // 이전날 완료한 항목 지우기
-        todoRepo.deleteAllBycompleteBefore(LocalDateTime.now());
+        todoRepo.deleteAllByCompleteNotNullAndCompleteBefore(LocalDateTime.now());
         // 아직 완료되지 않는 항목 미완료 풀로 이동시키기
         todoRepo.updateAllDelay();
+        System.out.println("cleaned");
     }
 
     // 할일을 완료하지 않는 사람들의 리스트를 가져다 줌.
-    @Scheduled(cron= "0 50 18 * * *")
+    @Scheduled(cron= "0 50 3 * * *")
     public void delegateNotify() {
-        List<String> userList=  todoRepo.findUserAllByCompleteTrue();
+        List<String> userList=  todoRepo.findUserIdAllByCompleteTrue();
+        userList.forEach(System.out::println);
         notiSvc.notifyUncompletedTodo(userList);
+        System.out.println("notify");
     }
 
     public void patchPriority() {

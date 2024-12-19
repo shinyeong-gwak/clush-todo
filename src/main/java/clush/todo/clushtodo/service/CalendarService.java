@@ -3,9 +3,7 @@ package clush.todo.clushtodo.service;
 import clush.todo.clushtodo.dto.Month;
 import clush.todo.clushtodo.dto.Notification;
 import clush.todo.clushtodo.dto.Schedule;
-import clush.todo.clushtodo.dto.ScheduleReq;
 import clush.todo.clushtodo.entity.Calendar;
-import clush.todo.clushtodo.entity.User;
 import clush.todo.clushtodo.error.CustomException;
 import clush.todo.clushtodo.repository.CalendarRepo;
 import lombok.RequiredArgsConstructor;
@@ -33,15 +31,16 @@ public class CalendarService {
     @Autowired
     NotificationService notiSvc;
 
-    public Long addSchedule(User user, Schedule schedule) throws CustomException {
+    public Long addSchedule(String userId, Schedule schedule) throws CustomException {
         Calendar saved = calRepo.saveAndFlush(Calendar.builder()
-                        .user(user)
+                        .userId(userId)
                         .start(schedule.getStart())
                         .end(schedule.getEnd())
                         .depth(schedule.getDepth())
                         .tag(Calendar.Color.valueOf(schedule.getTag()))
                         .name(schedule.getName())
                         .needNoti(schedule.getNeedNoti())
+                        .sent(false)
                 .build());
         try {
             return saved.getCid();
@@ -63,14 +62,14 @@ public class CalendarService {
         return calRepo.findAllByDay(start,end,userId);
     }
 
-    public Long editSchedule(Long cid, User user, Schedule newSchedule) throws CustomException {
+    public Long editSchedule(Long cid, String userId, Schedule newSchedule) throws CustomException {
 
         Optional<Calendar> existingCalendar = calRepo.findById(cid); // CID로 기존 데이터 조회
 
         if (existingCalendar.isPresent()) {
             // 새로운 값이 null이 아니면 set, 아니면 기존 값 유지
             Calendar calendar = existingCalendar.get();
-            calendar.setUser(user);
+            calendar.setUserId(userId);
             if (newSchedule.getName() != null) {
                 calendar.setName(newSchedule.getName());
             }
@@ -113,6 +112,7 @@ public class CalendarService {
         List<Notification> notifications = calRepo.findByRingBeforeAndSentFalse(s,e);
         for (Notification notification : notifications) {
             notiSvc.notify10MinutesLeft(notification);
+            //업데이트 비트 바꾸기
         }
     }
 }

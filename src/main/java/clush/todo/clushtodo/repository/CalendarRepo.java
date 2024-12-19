@@ -4,17 +4,13 @@ import clush.todo.clushtodo.dto.Month;
 import clush.todo.clushtodo.dto.Notification;
 import clush.todo.clushtodo.dto.Schedule;
 import clush.todo.clushtodo.entity.Calendar;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 public interface CalendarRepo extends JpaRepository<Calendar, Long> {
@@ -27,8 +23,7 @@ public interface CalendarRepo extends JpaRepository<Calendar, Long> {
                                 @Param("end") LocalDateTime end,
                                 @Param("userId") String userId);
 
-    @Modifying
-    @Transactional
-    @Query("SELECT new clush.todo.clushtodo.dto.Notification(c.user.userId,c.name,c.tag)  FROM Calendar c WHERE ( c.start BETWEEN :now1 AND :now2 ) AND c.sent=false AND c.needNoti =true")
-    List<Notification> findByRingBeforeAndSentFalse(LocalDateTime now1, LocalDateTime now2);
+
+    @Query("SELECT new clush.todo.clushtodo.dto.Notification(c.userId,c.name,c.tag)  FROM Calendar c WHERE ( c.start BETWEEN :now1 AND :now2 ) AND c.sent=false AND c.needNoti =true")
+    List<Notification> findByRingBeforeAndSentFalse(@Param("now1") LocalDateTime now1, @Param("now2") LocalDateTime now2);
 }
