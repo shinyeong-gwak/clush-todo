@@ -36,4 +36,11 @@ public class UserService {
             throw new CustomException(UNAUTHORIZED);
         return userOp.get();
     }
+
+    public boolean register(String id, String pw) {
+        if(repo.existsById(id))
+            return false;
+        repo.save(new User(id,pw));
+        return true;
+    }
 }

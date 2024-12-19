@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static clush.todo.clushtodo.error.CustomResponse.ALREADY_EXISTS;
 import static clush.todo.clushtodo.error.CustomResponse.INVALID_CREDENTIALS;
 
 @RestController
@@ -23,5 +24,12 @@ public class UserController {
         if (userService.simpleLogin(loginReq.id(), loginReq.pw()))
             return ResponseEntity.ok(HttpStatus.OK);
         return ResponseEntity.status(401).body(INVALID_CREDENTIALS);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> simpleRegister(@RequestBody LoginReq loginReq) {
+        if (userService.register(loginReq.id(),loginReq.pw()))
+            return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.status(404).body(ALREADY_EXISTS);
     }
 }
