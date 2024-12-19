@@ -42,4 +42,5 @@ public interface TodoRepo extends JpaRepository<Todo,Long> {
     @Query("SELECT DISTINCT t.userId FROM Todo t WHERE t.complete IS null")
     List<String> findUserIdAllByCompleteTrue();
 
+    void deleteAllBycompleteBefore(Object any);
 }
